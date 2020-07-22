@@ -37,6 +37,8 @@ class EasyStoreController extends Controller
 
     public function index(Request $request) {
 
+        $this->slack_say("#cx", json_encode("Entering index"));
+
         $timestamp = $request->timestamp;
         $shop = $request->shop;
         $hmac = $request->hmac;
@@ -44,6 +46,8 @@ class EasyStoreController extends Controller
         $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
 
         $url = " https://admin.easystore.co/oauth/authorize?app_id=". $this->client_id_blue ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
+
+        $this->slack_say("#cx", json_encode("Exting index, entering $url"));
 
         return redirect()->away($url);
 
