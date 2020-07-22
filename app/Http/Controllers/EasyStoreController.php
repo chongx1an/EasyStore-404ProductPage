@@ -39,10 +39,6 @@ class EasyStoreController extends Controller
 
     public function index(Request $request) {
 
-        if ( !$request->secure() ) {
-            return redirect()->secure($request->getRequestUri());
-        }
-
         $protocol = $request->getScheme();
         $this->slack_say("#cx", json_encode($protocol));
 
