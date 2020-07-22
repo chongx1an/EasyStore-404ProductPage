@@ -10,6 +10,9 @@ class EasyStoreController extends Controller
     private $client_id = "appf13f00a9c3894b84";
     private $client_secret = "72b566f95be98c546e6ac623941f080b";
 
+    private $client_id_blue = "appe7066f3464092d19";
+    private $client_secret_blue = "8b4036c2d4b870089f556b67ae72ed84";
+
     private $app_scopes = [
         'read_script_tags',
         'write_script_tags',
@@ -40,7 +43,7 @@ class EasyStoreController extends Controller
 
         $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
 
-        $url = " https://admin.easystore.co/oauth/authorize?app_id=". $this->client_id ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
+        $url = " https://admin.easystore.co/oauth/authorize?app_id=". $this->client_id_blue ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
 
         return redirect()->away($url);
 
@@ -65,8 +68,8 @@ class EasyStoreController extends Controller
         $ch = curl_init();
 
         $data = json_encode([
-            'client_id' => $this->client_id,
-            'client_secret' => $this->client_secret,
+            'client_id' => $this->client_id_blue,
+            'client_secret' => $this->client_secret_blue,
             'code' => $code
         ]);
 
