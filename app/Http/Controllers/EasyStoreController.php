@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Shop;
+
 class EasyStoreController extends Controller
 {
 
@@ -40,8 +42,22 @@ class EasyStoreController extends Controller
         $this->slack_say("#cx", json_encode("Entering index"));
 
         $timestamp = $request->timestamp;
-        $shop = $request->shop;
+        $shop_url = $request->shop;
         $hmac = $request->hmac;
+
+        $shop = Shop::where('url', $shop_url)
+                    ->where('is_deleted', false)
+                    ->first();
+
+        $this->slack_say("#cx", json_encode([
+            "message" => "Store found",
+            "shop" => $shop
+        ]));
+
+        if ($shop) {
+            $request->session()->put('easystore-shop', $shop_url);
+            return redirect('/easystore/setting');
+        }
 
         $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
 
@@ -49,6 +65,8 @@ class EasyStoreController extends Controller
         $easystore_url_blue = "https://admin.easystore.blue";
 
         $url = "$easystore_url_blue/oauth/authorize?app_id=". $this->client_id_blue ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
+
+        $this->slack_say("#cx", json_encode("Store not found, redirect to $url"));
 
         return redirect()->away($url);
 
@@ -83,7 +101,7 @@ class EasyStoreController extends Controller
         $result = curl_exec($ch);
         curl_close($ch);
 
-        $this->slack_say("#cx", json_encode($result));
+        $this->slack_say("#cx", json_encode("Exiting install"));
 
         return redirect('/easystore/setting');
 
