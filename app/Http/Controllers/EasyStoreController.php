@@ -79,7 +79,13 @@ class EasyStoreController extends Controller
 
         $this->slack_say("#cx", json_encode($result));
 
-        return $result;
+        return redirect('/easystore/setting');
+
+    }
+
+    public function setting(Request $request){
+
+      return '404 product setting page';
 
     }
 
