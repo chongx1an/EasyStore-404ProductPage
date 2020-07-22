@@ -77,11 +77,11 @@ class EasyStoreController extends Controller
         //open connection
         $ch = curl_init();
 
-        $data = json_encode([
+        $data = [
             'client_id' => $this->client_id_blue,
             'client_secret' => $this->client_secret_blue,
             'code' => $code
-        ]);
+        ];
 
         //set the url, number of POST vars, POST data
         curl_setopt($ch, CURLOPT_URL, $url);
