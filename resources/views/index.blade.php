@@ -8,14 +8,6 @@
 
 	<link rel="stylesheet" href="https://s3-ap-southeast-1.amazonaws.com/assets.easystore.co/css/uikit.css">
 	<script src="https://s3-ap-southeast-1.amazonaws.com/assets.easystore.co/js/uikit.js"></script>
-
-
-	<script type="text/javascript">
-	EasyStoreApp.init({
-		apiKey: 'appe7066f3464092d19'
-	});
-	</script>
-
 </head>
 <body>
 	<div class="page-layout">
