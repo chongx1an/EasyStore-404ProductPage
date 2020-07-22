@@ -54,12 +54,9 @@ class EasyStoreController extends Controller
         $shop = $request->shop;
         $hmac = $request->hmac;
 
+        return "You are at install";
+
     }
 
-    private function getAccessToken($code = ''){
-		$dta = array('client_id' => $this->_API['API_KEY'], 'client_secret' => $this->_API['API_SECRET'], 'code' => $code);
-		$data = $this->call(['METHOD' => 'POST', 'URL' => 'oauth/access_token', 'DATA' => $dta], FALSE);
-		return isset($data->access_token) ? $data->access_token : false;
-    }
 
 }
