@@ -48,6 +48,8 @@ class EasyStoreController extends Controller
 
     public function install(Request $request) {
 
+        $this->slack_say("#cx", json_encode("Entering install"));
+
         $code = $request->code;
         $timestamp = $request->timestamp;
         $shop = $request->shop;
