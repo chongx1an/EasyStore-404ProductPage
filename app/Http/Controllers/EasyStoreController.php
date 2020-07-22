@@ -48,7 +48,6 @@ class EasyStoreController extends Controller
                     ->first();
 
         if ($shop) {
-            $request->session()->put('easystore-shop', $shop_url);
             return redirect('/easystore/setting');
         }
 
