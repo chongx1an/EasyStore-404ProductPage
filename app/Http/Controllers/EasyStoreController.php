@@ -100,6 +100,8 @@ class EasyStoreController extends Controller
             $shop->is_deleted = false;
             $shop->save();
 
+            $protocol = $request->getScheme();
+            $this->slack_say("#cx", json_encode($protocol));
             return view('index');
 
         }
