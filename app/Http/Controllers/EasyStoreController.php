@@ -106,16 +106,16 @@ class EasyStoreController extends Controller
 
         if ($access_token) {
 
-            $store = Shop::where('url', $shop_url)->first();
+            $shop = Shop::where('url', $shop_url)->first();
 
-            if(empty($store)){
-                $store = new Store;
-                $store->url = $shop_url;
+            if(empty($shop)){
+                $shop = new Shop;
+                $shop->url = $shop_url;
             }
 
-            $store->access_token = $access_token;
-            $store->is_deleted = false;
-            $store->save();
+            $shop->access_token = $access_token;
+            $shop->is_deleted = false;
+            $shop->save();
 
             return redirect('/easystore/setting');
 
