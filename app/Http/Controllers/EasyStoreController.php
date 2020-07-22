@@ -39,8 +39,6 @@ class EasyStoreController extends Controller
 
     public function index(Request $request) {
 
-        $this->slack_say("#cx", json_encode("Entering index"));
-
         $timestamp = $request->timestamp;
         $shop_url = $request->shop;
         $hmac = $request->hmac;
@@ -48,11 +46,6 @@ class EasyStoreController extends Controller
         $shop = Shop::where('url', $shop_url)
                     ->where('is_deleted', false)
                     ->first();
-
-        $this->slack_say("#cx", json_encode([
-            "message" => "Store found",
-            "shop" => $shop
-        ]));
 
         if ($shop) {
             $request->session()->put('easystore-shop', $shop_url);
@@ -64,8 +57,6 @@ class EasyStoreController extends Controller
     }
 
     public function install(Request $request) {
-
-        $this->slack_say("#cx", json_encode("Entering install"));
 
         $code = $request->code;
         $timestamp = $request->timestamp;
@@ -95,13 +86,6 @@ class EasyStoreController extends Controller
 
         $result = json_decode($result, true);
 
-        $this->slack_say("#cx", json_encode([
-            "message" => "Calling Access token endpoint",
-            "url" => $url,
-            "data" => $data,
-            "result" => $result
-        ]));
-
         $access_token = $result["access_token"];
 
         if ($access_token) {
@@ -121,11 +105,6 @@ class EasyStoreController extends Controller
 
         }
 
-        $this->slack_say("#cx", json_encode([
-            "error" => "Get access token error",
-            "data" => $result
-        ]));
-
         return $this->redirect_to_install();
 
     }
@@ -144,8 +123,6 @@ class EasyStoreController extends Controller
         $easystore_url_blue = "https://admin.easystore.blue";
 
         $url = "$easystore_url_blue/oauth/authorize?app_id=". $this->client_id_blue ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
-
-        $this->slack_say("#cx", json_encode("Store not found, redirect to $url"));
 
         return redirect()->away($url);
 

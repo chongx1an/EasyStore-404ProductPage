@@ -21,7 +21,7 @@
 	<div class="page-layout">
 		<div class="layout layout--1">
 			<div class="layout__section">
-                Hi
+                Hi, welcome here.
 			</div>
 		</div>
 	</div>
