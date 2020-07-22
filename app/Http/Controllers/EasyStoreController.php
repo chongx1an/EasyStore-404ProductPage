@@ -50,8 +50,6 @@ class EasyStoreController extends Controller
 
         $url = "$easystore_url_blue/oauth/authorize?app_id=". $this->client_id_blue ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
 
-        $this->slack_say("#cx", json_encode("Exting index, entering $url"));
-
         return redirect()->away($url);
 
     }
@@ -97,7 +95,7 @@ class EasyStoreController extends Controller
 
     public function setting(Request $request){
 
-      return '404 product setting page';
+        return view('/index');
 
     }
 
