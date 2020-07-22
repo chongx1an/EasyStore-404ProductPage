@@ -46,7 +46,7 @@ class EasyStoreController extends Controller
         $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
 
         $easystore_url = "https://admin.easystore.co";
-        $easystore_url_blue = "https://admin.easystore.co";
+        $easystore_url_blue = "https://admin.easystore.blue";
 
         $url = "$easystore_url_blue/oauth/authorize?app_id=". $this->client_id_blue ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
 
