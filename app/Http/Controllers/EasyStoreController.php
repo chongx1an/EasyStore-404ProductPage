@@ -75,10 +75,26 @@ class EasyStoreController extends Controller
 
         //execute post
         $result = curl_exec($ch);
-        echo $result;
+        curl_close($ch);
+
+        $this->slack_say("#cx", json_encode($result));
 
         return $result;
 
+    }
+
+    function slack_say($channel, $text){
+        $msg = "payload=".json_encode([
+            'text' => $text,
+            'channel' => $channel,
+        ]);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://hooks.slack.com/services/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");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $msg);
+        $reply = curl_exec($ch);
+        curl_close($ch);
     }
 
 
