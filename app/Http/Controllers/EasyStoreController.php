@@ -103,7 +103,7 @@ class EasyStoreController extends Controller
             $shop->is_deleted = false;
             $shop->save();
 
-            return view('index');
+            return redirect('/easystore/setting');
 
         }
 
@@ -113,7 +113,7 @@ class EasyStoreController extends Controller
 
     public function setting(Request $request){
 
-        return view('/index');
+        return view('index');
 
     }
 
