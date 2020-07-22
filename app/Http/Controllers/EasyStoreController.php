@@ -89,15 +89,16 @@ class EasyStoreController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $this->slack_say("#cx", json_encode([
-            "message" => "Calling Access token endpoint",
-            "url" => $url,
-            "data" => $data
-        ]));
-
         //execute post
         $result = curl_exec($ch);
         curl_close($ch);
+
+        $this->slack_say("#cx", json_encode([
+            "message" => "Calling Access token endpoint",
+            "url" => $url,
+            "data" => $data,
+            "result" => $result
+        ]));
 
         $access_token = $result["access_token"];
 
