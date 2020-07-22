@@ -93,6 +93,8 @@ class EasyStoreController extends Controller
         $result = curl_exec($ch);
         curl_close($ch);
 
+        $result = json_decode($result);
+
         $this->slack_say("#cx", json_encode([
             "message" => "Calling Access token endpoint",
             "url" => $url,
