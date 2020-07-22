@@ -27,8 +27,7 @@ class EasyStoreController extends Controller
         'write_fulfillments',
         'read_shipping',
         'write_shipping',
-        'read_currencies',
-        'delete_order'
+        'read_currencies'
     ];
 
     private $redirect_path = "/easystore/install";
