@@ -100,7 +100,7 @@ class EasyStoreController extends Controller
             $shop->is_deleted = false;
             $shop->save();
 
-            return view('/index');
+            return view('index');
 
         }
 
