@@ -38,11 +38,10 @@ class EasyStoreController extends Controller
         $shop = $request->shop;
         $hmac = $request->hmac;
 
-        $redirect_uri = $_SERVER['SERVER_NAME'] . $this->redirect_path;
+        $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
 
         $url = " https://admin.easystore.co/oauth/authorize?app_id=". $this->client_id ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
 
-        return [ "url" => $url ];
         return redirect()->away($url);
 
     }
