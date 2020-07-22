@@ -19,5 +19,5 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'easystore'], function () {
     Route::get('/', 'EasyStoreController@index');
-    Route::post('/install', 'EasyStoreController@install');
+    Route::get('/install', 'EasyStoreController@install');
 });
