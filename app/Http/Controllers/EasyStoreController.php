@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 class EasyStoreController extends Controller
 {
 
-    private $client_id = "appkjhgfgkl";
+    private $client_id = "appf13f00a9c3894b84";
+    private $client_secret = "72b566f95be98c546e6ac623941f080b";
 
     private $app_scopes = [
         'read_script_tags',
@@ -42,7 +43,6 @@ class EasyStoreController extends Controller
 
         $url = " https://admin.easystore.co/oauth/authorize?app_id=". $this->client_id ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
 
-        return ["url" => $url];
         return redirect()->away($url);
 
     }
@@ -54,7 +54,31 @@ class EasyStoreController extends Controller
         $shop = $request->shop;
         $hmac = $request->hmac;
 
-        return "You are at install";
+        return [
+            "shop" => $shop
+        ];
+
+        $url = $shop.'/api/1.0/oauth/access_token';
+
+        //open connection
+        $ch = curl_init();
+
+        $data = json_encode([
+            'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret,
+            'code' => $code
+        ]);
+
+        //set the url, number of POST vars, POST data
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+        //execute post
+        $result = curl_exec($ch);
+        echo $result;
+
+        return $result;
 
     }
 
