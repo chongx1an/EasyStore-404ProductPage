@@ -63,10 +63,6 @@ class EasyStoreController extends Controller
         $shop = $request->shop;
         $hmac = $request->hmac;
 
-        return [
-            "shop" => $shop
-        ];
-
         $url = $shop.'/api/1.0/oauth/access_token';
 
         //open connection
