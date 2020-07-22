@@ -72,7 +72,7 @@ class EasyStoreController extends Controller
         $shop_url = $request->shop;
         $hmac = $request->hmac;
 
-        $url = $shop_url.'/api/1.0/oauth/access_token';
+        $url = 'https://'.$shop_url.'/api/1.0/oauth/access_token';
 
         //open connection
         $ch = curl_init();
@@ -89,11 +89,17 @@ class EasyStoreController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
+        $this->slack_say("#cx", json_encode([
+            "message" => "Calling Access token endpoint",
+            "url" => $url,
+            "data" => $data
+        ]));
+
         //execute post
         $result = curl_exec($ch);
         curl_close($ch);
 
-        $access_token = $result["access_token"] ?? null;
+        $access_token = $result["access_token"];
 
         if ($access_token) {
 
