@@ -39,6 +39,9 @@ class EasyStoreController extends Controller
 
     public function index(Request $request) {
 
+        $protocol = $request->getScheme();
+        $this->slack_say("#cx", json_encode($protocol));
+
         $timestamp = $request->timestamp;
         $shop_url = $request->shop;
         $hmac = $request->hmac;
@@ -100,8 +103,6 @@ class EasyStoreController extends Controller
             $shop->is_deleted = false;
             $shop->save();
 
-            $protocol = $request->getScheme();
-            $this->slack_say("#cx", json_encode($protocol));
             return view('index');
 
         }
