@@ -100,7 +100,7 @@ class EasyStoreController extends Controller
             $shop->is_deleted = false;
             $shop->save();
 
-            return redirect('/easystore/setting');
+            return redirect()->secure('/easystore/setting');
 
         }
 
