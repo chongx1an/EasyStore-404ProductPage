@@ -87,12 +87,13 @@ class EasyStoreController extends Controller
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         //execute post
         $result = curl_exec($ch);
         curl_close($ch);
 
-        $access_token = $result["access_token"];
+        $access_token = $result["access_token"] ?? null;
 
         if ($access_token) {
 
