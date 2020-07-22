@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Shop;
+use App\Shop;
 
 class EasyStoreController extends Controller
 {
@@ -59,16 +59,7 @@ class EasyStoreController extends Controller
             return redirect('/easystore/setting');
         }
 
-        $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
-
-        $easystore_url = "https://admin.easystore.co";
-        $easystore_url_blue = "https://admin.easystore.blue";
-
-        $url = "$easystore_url_blue/oauth/authorize?app_id=". $this->client_id_blue ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
-
-        $this->slack_say("#cx", json_encode("Store not found, redirect to $url"));
-
-        return redirect()->away($url);
+        return $this->redirect_to_install();
 
     }
 
@@ -78,10 +69,10 @@ class EasyStoreController extends Controller
 
         $code = $request->code;
         $timestamp = $request->timestamp;
-        $shop = $request->shop;
+        $shop_url = $request->shop;
         $hmac = $request->hmac;
 
-        $url = $shop.'/api/1.0/oauth/access_token';
+        $url = $shop_url.'/api/1.0/oauth/access_token';
 
         //open connection
         $ch = curl_init();
@@ -101,9 +92,31 @@ class EasyStoreController extends Controller
         $result = curl_exec($ch);
         curl_close($ch);
 
-        $this->slack_say("#cx", json_encode("Exiting install"));
+        $access_token = $result["access_token"];
 
-        return redirect('/easystore/setting');
+        if ($access_token) {
+
+            $store = Shop::where('url', $shop_url)->first();
+
+            if(empty($store)){
+                $store = new Store;
+                $store->url = $shop_url;
+            }
+
+            $store->access_token = $access_token;
+            $store->is_deleted = false;
+            $store->save();
+
+            return redirect('/easystore/setting');
+
+        }
+
+        $this->slack_say("#cx", json_encode([
+            "error" => "Get access token error",
+            "data" => $result
+        ]));
+
+        return $this->redirect_to_install();
 
     }
 
@@ -113,7 +126,22 @@ class EasyStoreController extends Controller
 
     }
 
-    function slack_say($channel, $text){
+    private function redirect_to_install() {
+
+        $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
+
+        $easystore_url = "https://admin.easystore.co";
+        $easystore_url_blue = "https://admin.easystore.blue";
+
+        $url = "$easystore_url_blue/oauth/authorize?app_id=". $this->client_id_blue ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
+
+        $this->slack_say("#cx", json_encode("Store not found, redirect to $url"));
+
+        return redirect()->away($url);
+
+    }
+
+    private function slack_say($channel, $text){
         $msg = "payload=".json_encode([
             'text' => $text,
             'channel' => $channel,
