@@ -42,6 +42,7 @@ class EasyStoreController extends Controller
 
         $url = " https://admin.easystore.co/oauth/authorize?app_id=". $this->client_id ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
 
+        dd($url);
         return redirect()->away($url);
 
     }
