@@ -47,6 +47,12 @@ class EasyStoreController extends Controller
         $shop_url = $request->shop;
         $hmac = $request->hmac;
 
+        $hmac_correct = $this->verifyHmac($hmac, [ "shop" => $shop_url, "timestamp" => $timestamp ]);
+
+        if (!$hmac_correct) {
+            return "HMAC not same";
+        }
+
         $shop = Shop::where('url', $shop_url)
                     ->where('is_deleted', false)
                     ->first();
@@ -65,6 +71,12 @@ class EasyStoreController extends Controller
         $timestamp = $request->timestamp;
         $shop_url = $request->shop;
         $hmac = $request->hmac;
+
+        $hmac_correct = $this->verifyHmac($hmac, [ "code" => $code, "shop" => $shop_url, "timestamp" => $timestamp ]);
+
+        if (!$hmac_correct) {
+            return "HMAC not same";
+        }
 
         $url = 'https://'.$shop_url.'/api/1.0/oauth/access_token';
 
@@ -128,6 +140,17 @@ class EasyStoreController extends Controller
 
         return redirect()->away($url);
 
+    }
+
+    private function verifyHmac($hmac, $data) {
+
+        ksort($data);
+
+        $data = urldecode(http_build_query($data));
+
+        $calculated = hash_hmac('sha256', $data, $this->client_secret);
+
+        return $hmac === $calculated;
     }
 
     private function slack_say($channel, $text){
