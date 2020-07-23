@@ -121,6 +121,12 @@ class EasyStoreController extends Controller
             return response()->json(['errors' => 'Topic invalid'], 400);
         }
 
+        $this->slack_say("#cx", json_encode([
+            "msg" => "Entering uninstall",
+            'Easystore-Topic' => $request->header('Easystore-Topic'),
+            'shop_url' => $request->header('Easystore-Shop-Domain')
+        ]));
+
         $data = file_get_contents('php://input');
         $hmac = hash_hmac('sha256', $data, $this->client_secret);
         $shop_url = $request->header('Easystore-Shop-Domain');
