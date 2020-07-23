@@ -9,8 +9,8 @@ use App\Shop;
 class EasyStoreController extends Controller
 {
 
-    private $client_id = "appf13f00a9c3894b84";
-    private $client_secret = "72b566f95be98c546e6ac623941f080b";
+    private $client_id;
+    private $client_secret;
 
     private $app_scopes = [
         'read_script_tags',
@@ -33,6 +33,13 @@ class EasyStoreController extends Controller
     ];
 
     private $redirect_path = "/easystore/install";
+
+    public function __construct(Request $request){
+
+        $client_id = env('EASYSTORE_CLIENT_ID');
+        $client_secret = env('EASYSTORE_CLIENT_SECRET');
+
+    }
 
     public function index(Request $request) {
 
