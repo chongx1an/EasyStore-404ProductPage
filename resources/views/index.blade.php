@@ -8,6 +8,8 @@
 
 	<link rel="stylesheet" href="https://s3-ap-southeast-1.amazonaws.com/assets.easystore.co/css/uikit.css">
 	<script src="https://s3-ap-southeast-1.amazonaws.com/assets.easystore.co/js/uikit.js"></script>
+
+    <script type="text/javascript" src="https://admin.easystore.co/assets/external/app.20160907.js"></script>
     <script type="text/javascript">
 	EasyStoreApp.init({
 		apiKey: env('EASYSTORE_CLIENT_ID')
