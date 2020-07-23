@@ -122,7 +122,7 @@ class EasyStoreController extends Controller
         }
 
         $data = file_get_contents('php://input');
-        $hmac = hash_hmac('sha256', $data, $this->app_secret);
+        $hmac = hash_hmac('sha256', $data, $this->client_secret);
         $shop_url = $request->header('Easystore-Shop-Domain');
 
         if ($hmac != $request->header('Easystore-Hmac-Sha256')) {
