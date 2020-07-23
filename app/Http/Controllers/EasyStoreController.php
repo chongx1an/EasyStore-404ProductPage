@@ -135,9 +135,8 @@ class EasyStoreController extends Controller
             return response()->json(['errors' => 'Shop not exists'], 200);
         }
 
-        $store->is_deleted = true;
-        $store->display_data = null;
-        $store->save();
+        $shop->is_deleted = true;
+        $shop->save();
 
         return response()->json(['success' => 'Shop deleted successfully.'], 200);
 
