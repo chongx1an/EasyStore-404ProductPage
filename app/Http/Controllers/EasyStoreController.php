@@ -183,6 +183,7 @@ class EasyStoreController extends Controller
         $url = 'https://'.$shop->url.'/api/1.0/webhooks.json';
 
         $webhook_url = "https://" . $_SERVER['SERVER_NAME'] . '/easystore/uninstall';
+        $access_token = $shop->access_token;
 
         $data = json_encode([
             'webhook' => [
@@ -194,7 +195,7 @@ class EasyStoreController extends Controller
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['EasyStore-Access-Token' => $shop->access_token]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["EasyStore-Access-Token: $access_token"]);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
