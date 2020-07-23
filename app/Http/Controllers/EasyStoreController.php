@@ -178,12 +178,12 @@ class EasyStoreController extends Controller
 
         $webhook_url = "https://" . $_SERVER['SERVER_NAME'] . '/easystore/uninstall';
 
-        $data = [
+        $data = json_encode([
             'webhook' => [
                 'topic' => 'app/uninstall',
                 'url' => $webhook_url,
             ]
-        ];
+        ]);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
