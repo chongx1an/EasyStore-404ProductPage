@@ -36,8 +36,8 @@ class EasyStoreController extends Controller
 
     public function __construct(Request $request){
 
-        $client_id = env('EASYSTORE_CLIENT_ID');
-        $client_secret = env('EASYSTORE_CLIENT_SECRET');
+        $this->client_id = env('EASYSTORE_CLIENT_ID');
+        $this->client_secret = env('EASYSTORE_CLIENT_SECRET');
 
     }
 
