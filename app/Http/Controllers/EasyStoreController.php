@@ -12,9 +12,6 @@ class EasyStoreController extends Controller
     private $client_id = "appf13f00a9c3894b84";
     private $client_secret = "72b566f95be98c546e6ac623941f080b";
 
-    private $client_id_blue = "appe7066f3464092d19";
-    private $client_secret_blue = "8b4036c2d4b870089f556b67ae72ed84";
-
     private $app_scopes = [
         'read_script_tags',
         'write_script_tags',
@@ -38,9 +35,6 @@ class EasyStoreController extends Controller
     private $redirect_path = "/easystore/install";
 
     public function index(Request $request) {
-
-        $protocol = $request->getScheme();
-        $this->slack_say("#cx", json_encode($protocol));
 
         $timestamp = $request->timestamp;
         $shop_url = $request->shop;
@@ -71,8 +65,8 @@ class EasyStoreController extends Controller
         $ch = curl_init();
 
         $data = [
-            'client_id' => $this->client_id_blue,
-            'client_secret' => $this->client_secret_blue,
+            'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret,
             'code' => $code
         ];
 
@@ -122,9 +116,8 @@ class EasyStoreController extends Controller
         $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
 
         $easystore_url = "https://admin.easystore.co";
-        $easystore_url_blue = "https://admin.easystore.blue";
 
-        $url = "$easystore_url_blue/oauth/authorize?app_id=". $this->client_id_blue ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
+        $url = "$easystore_url/oauth/authorize?app_id=". $this->client_id ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
 
         return redirect()->away($url);
 
