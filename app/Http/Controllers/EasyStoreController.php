@@ -102,7 +102,7 @@ class EasyStoreController extends Controller
         $shop->is_deleted = false;
         $shop->save();
 
-        $this->subscribeUninstallWebhook($shop_url);
+        $this->subscribeUninstallWebhook($shop);
 
         return redirect('/easystore/setting');
 
@@ -178,9 +178,9 @@ class EasyStoreController extends Controller
 
     }
 
-    private function subscribeUninstallWebhook($shop_url) {
+    private function subscribeUninstallWebhook($shop) {
 
-        $url = 'https://'.$shop_url.'/api/1.0/webhooks.json';
+        $url = 'https://'.$shop->url.'/api/1.0/webhooks.json';
 
         $webhook_url = "https://" . $_SERVER['SERVER_NAME'] . '/easystore/uninstall';
 
@@ -194,6 +194,7 @@ class EasyStoreController extends Controller
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, 'EasyStore-Access-Token: ' . $shop->access_token);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
