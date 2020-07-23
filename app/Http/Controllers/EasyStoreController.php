@@ -117,28 +117,13 @@ class EasyStoreController extends Controller
 
     public function uninstall(Request $request) {
 
-        $this->slack_say("#cx", json_encode([
-            "msg" => "Entering uninstall"
-        ]));
-
         if ($request->header('Easystore-Topic') != 'app/uninstall') {
             return response()->json(['errors' => 'Topic invalid'], 400);
         }
 
-        $this->slack_say("#cx", json_encode([
-            'Easystore-Topic' => $request->header('Easystore-Topic'),
-            'shop_url' => $request->header('Easystore-Shop-Domain')
-        ]));
-
         $data = file_get_contents('php://input');
         $hmac = hash_hmac('sha256', $data, $this->client_secret);
         $shop_url = $request->header('Easystore-Shop-Domain');
-
-        $this->slack_say("#cx", json_encode([
-            'Easystore-Topic' => $request->header('Easystore-Topic'),
-            'data' => $data,
-            'shop_url' => $shop_url
-        ]));
 
         if ($hmac != $request->header('Easystore-Hmac-Sha256')) {
             return response()->json(['errors' => 'Hmac validate fail'], 400);
@@ -210,11 +195,6 @@ class EasyStoreController extends Controller
 
         $result = curl_exec($ch);
         curl_close($ch);
-
-        $this->slack_say("#cx", json_encode([
-            'creating' => "Webhook",
-            'result' => json_encode($result, true)
-        ]));
 
     }
 
