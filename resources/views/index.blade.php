@@ -12,7 +12,7 @@
     <script type="text/javascript" src="https://admin.easystore.co/assets/external/app.20160907.js"></script>
     <script type="text/javascript">
 	EasyStoreApp.init({
-		apiKey: config('app.EASYSTORE_CLIENT_ID')
+		apiKey: {{ env('EASYSTORE_CLIENT_ID') }}
 	});
 	</script>
 </head>
