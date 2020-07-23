@@ -125,6 +125,12 @@ class EasyStoreController extends Controller
         $hmac = hash_hmac('sha256', $data, $this->client_secret);
         $shop_url = $request->header('Easystore-Shop-Domain');
 
+        $this->slack_say("#cx", json_encode([
+            'Easystore-Topic' => $request->header('Easystore-Topic'),
+            'data' => $data,
+            'shop_url' => $shop_url
+        ]));
+
         if ($hmac != $request->header('Easystore-Hmac-Sha256')) {
             return response()->json(['errors' => 'Hmac validate fail'], 400);
         }
