@@ -50,18 +50,18 @@ class EasyStoreController extends Controller
         $hmac_correct = $this->verifyHmac($hmac, [ "shop" => $shop_url, "timestamp" => $timestamp ]);
 
         if (!$hmac_correct) {
-            return "HMAC not same";
+            return response()->json(['errors' => 'Hmac validate fail'], 400);
         }
 
         $shop = Shop::where('url', $shop_url)
                     ->where('is_deleted', false)
                     ->first();
 
-        if ($shop) {
-            return redirect('/easystore/setting');
+        if (!$shop) {
+            return $this->redirectToInstall();
         }
 
-        return $this->redirect_to_install();
+        return redirect('/easystore/setting');
 
     }
 
@@ -75,52 +75,37 @@ class EasyStoreController extends Controller
         $hmac_correct = $this->verifyHmac($hmac, [ "code" => $code, "shop" => $shop_url, "timestamp" => $timestamp ]);
 
         if (!$hmac_correct) {
-            return "HMAC not same";
+            return response()->json(['errors' => 'Hmac validate fail'], 400);
         }
 
-        $url = 'https://'.$shop_url.'/api/1.0/oauth/access_token';
-
-        //open connection
-        $ch = curl_init();
-
         $data = [
+            'shop_url' => $shop_url,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'code' => $code
         ];
 
-        //set the url, number of POST vars, POST data
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $access_token = $this->getAccessToken($data);
 
-        //execute post
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        $result = json_decode($result, true);
-
-        $access_token = $result["access_token"];
-
-        if ($access_token) {
-
-            $shop = Shop::where('url', $shop_url)->first();
-
-            if(empty($shop)){
-                $shop = new Shop;
-                $shop->url = $shop_url;
-            }
-
-            $shop->access_token = $access_token;
-            $shop->is_deleted = false;
-            $shop->save();
-
-            return redirect('/easystore/setting');
-
+        if (!$access_token) {
+            return $this->redirectToInstall();
         }
 
-        return $this->redirect_to_install();
+        $shop = Shop::where('url', $shop_url)->first();
+
+        if(empty($shop)){
+            $shop = new Shop;
+            $shop->url = $shop_url;
+        }
+
+        $shop->access_token = $access_token;
+        $shop->is_deleted = false;
+        $shop->save();
+
+        $this->subscribeUninstallWebhook($shop_url);
+
+        return redirect('/easystore/setting');
+
 
     }
 
@@ -130,7 +115,89 @@ class EasyStoreController extends Controller
 
     }
 
-    private function redirect_to_install() {
+    public function uninstall(Request $request) {
+
+        if ($request->header('Easystore-Topic') != 'app/uninstall') {
+            return response()->json(['errors' => 'Topic invalid'], 400);
+        }
+
+        $data = file_get_contents('php://input');
+        $hmac = hash_hmac('sha256', $data, $this->app_secret);
+        $shop_url = $request->header('Easystore-Shop-Domain');
+
+        if ($hmac != $request->header('Easystore-Hmac-Sha256')) {
+            return response()->json(['errors' => 'Hmac validate fail'], 400);
+        }
+
+        $shop = Shop::where('url', $shop_url)->first();
+
+        if (!$shop) {
+            return response()->json(['errors' => 'Shop not exists'], 200);
+        }
+
+        $store->is_deleted = true;
+        $store->display_data = null;
+        $store->save();
+
+        return response()->json(['success' => 'Shop deleted successfully.'], 200);
+
+
+    }
+
+    private function getAccessToken($data) {
+
+        $shop_url = $data["shop_url"];
+
+        $url = 'https://'.$shop_url.'/api/1.0/oauth/access_token';
+
+        $data = [
+            'client_id' => $data["client_id"],
+            'client_secret' => $data["client_secret"],
+            'code' => $data["code"]
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $result = json_decode($result, true);
+
+        $access_token = $result["access_token"];
+
+        return $access_token;
+
+    }
+
+    private function subscribeUninstallWebhook($shop_url) {
+
+        $url = 'https://'.$shop_url.'/api/1.0/webhooks.json';
+
+        $webhook_url = "https://" . $_SERVER['SERVER_NAME'] . '/easystore/uninstall';
+
+        $data = [
+            'webhook' => [
+                'topic' => 'app/uninstall',
+                'url' => $webhook_url,
+            ]
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+    }
+
+    private function redirectToInstall() {
 
         $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
 
