@@ -117,12 +117,15 @@ class EasyStoreController extends Controller
 
     public function uninstall(Request $request) {
 
+        $this->slack_say("#cx", json_encode([
+            "msg" => "Entering uninstall"
+        ]));
+
         if ($request->header('Easystore-Topic') != 'app/uninstall') {
             return response()->json(['errors' => 'Topic invalid'], 400);
         }
 
         $this->slack_say("#cx", json_encode([
-            "msg" => "Entering uninstall",
             'Easystore-Topic' => $request->header('Easystore-Topic'),
             'shop_url' => $request->header('Easystore-Shop-Domain')
         ]));
