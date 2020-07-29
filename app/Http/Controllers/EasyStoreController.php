@@ -109,12 +109,6 @@ class EasyStoreController extends Controller
 
     }
 
-    public function setting(Request $request){
-
-        return view('index');
-
-    }
-
     public function uninstall(Request $request) {
 
         if ($request->header('Easystore-Topic') != 'app/uninstall') {
