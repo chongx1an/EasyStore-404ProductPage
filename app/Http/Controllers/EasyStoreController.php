@@ -61,7 +61,7 @@ class EasyStoreController extends Controller
             return $this->redirectToInstall();
         }
 
-        return redirect('/easystore/setting');
+        return view('index');
 
     }
 
@@ -104,7 +104,7 @@ class EasyStoreController extends Controller
 
         $this->subscribeUninstallWebhook($shop);
 
-        return redirect('/easystore/setting');
+        return view('index');
 
 
     }
