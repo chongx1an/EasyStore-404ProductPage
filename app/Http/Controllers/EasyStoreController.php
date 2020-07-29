@@ -166,7 +166,7 @@ class EasyStoreController extends Controller
 
         $result = json_decode($result, true);
 
-        $access_token = $result["access_token"];
+        $access_token = $result["access_token"] ?? null;
 
         return $access_token;
 
