@@ -116,6 +116,7 @@ class EasyStoreController extends Controller
         }
 
         $data = file_get_contents('php://input');
+        $this->slack_say("#cx", json_encode($data));
         $hmac = hash_hmac('sha256', $data, $this->client_secret);
         $shop_url = $request->header('Easystore-Shop-Domain');
 
