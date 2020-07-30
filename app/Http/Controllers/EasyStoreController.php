@@ -222,7 +222,7 @@ class EasyStoreController extends Controller
             'channel' => $channel,
         ]);
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://hooks.slack.com/services/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");
+        curl_setopt($ch, CURLOPT_URL, "https://hooks.slack.com/services/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");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $msg);
