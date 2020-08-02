@@ -54,6 +54,8 @@ class EasyStoreController extends Controller
         $timestamp = $request->timestamp;
         $hmac = $request->hmac;
 
+        $this->host_url = $host_url;
+
         $hmac_correct = $this->verifyHmac($hmac, [ "host_url" => $host_url, "shop" => $shop_url, "timestamp" => $timestamp ]);
 
         if (!$hmac_correct) {
@@ -79,6 +81,8 @@ class EasyStoreController extends Controller
         $timestamp = $request->timestamp;
         $shop_url = $request->shop;
         $hmac = $request->hmac;
+
+        $this->host_url = $host_url;
 
         $hmac_correct = $this->verifyHmac($hmac, [ "code" => $code, "host_url" => $host_url, "shop" => $shop_url, "timestamp" => $timestamp ]);
 
