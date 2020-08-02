@@ -116,7 +116,12 @@ class EasyStoreController extends Controller
 
         $this->subscribeUninstallWebhook($shop);
 
-        return view('index');
+        $host_url = $this->host_url ?? "https://admin.easystore.co";
+        $client_id = $this->client_id;
+
+        $setting_url = "$host_url/apps/installed/$client_id";
+
+        return redirect()->away($setting_url);
 
 
     }
