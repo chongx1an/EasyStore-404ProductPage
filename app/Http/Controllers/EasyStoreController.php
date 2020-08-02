@@ -32,22 +32,29 @@ class EasyStoreController extends Controller
         'read_currencies'
     ];
 
+    private $host_url;
     private $redirect_path = "/easystore/install";
 
     public function __construct(Request $request){
 
-        $this->client_id = env('EASYSTORE_CLIENT_ID');
-        $this->client_secret = env('EASYSTORE_CLIENT_SECRET');
+        if (env("APP_ENV") == "production") {
+            $this->client_id = env('EASYSTORE_CLIENT_ID');
+            $this->client_secret = env('EASYSTORE_CLIENT_SECRET');
+        } else {
+            $this->client_id = env('EASYSTORE_CLIENT_ID_DEV');
+            $this->client_secret = env('EASYSTORE_CLIENT_SECRET_DEV');
+        }
 
     }
 
     public function index(Request $request) {
 
-        $timestamp = $request->timestamp;
+        $host_url = $request->host_url;
         $shop_url = $request->shop;
+        $timestamp = $request->timestamp;
         $hmac = $request->hmac;
 
-        $hmac_correct = $this->verifyHmac($hmac, [ "shop" => $shop_url, "timestamp" => $timestamp ]);
+        $hmac_correct = $this->verifyHmac($hmac, [ "host_url" => $host_url, "shop" => $shop_url, "timestamp" => $timestamp ]);
 
         if (!$hmac_correct) {
             return response()->json(['errors' => 'Hmac validate fail'], 400);
@@ -68,11 +75,12 @@ class EasyStoreController extends Controller
     public function install(Request $request) {
 
         $code = $request->code;
+        $host_url = $request->host_url;
         $timestamp = $request->timestamp;
         $shop_url = $request->shop;
         $hmac = $request->hmac;
 
-        $hmac_correct = $this->verifyHmac($hmac, [ "code" => $code, "shop" => $shop_url, "timestamp" => $timestamp ]);
+        $hmac_correct = $this->verifyHmac($hmac, [ "code" => $code, "host_url" => $host_url, "shop" => $shop_url, "timestamp" => $timestamp ]);
 
         if (!$hmac_correct) {
             return response()->json(['errors' => 'Hmac validate fail'], 400);
@@ -197,9 +205,9 @@ class EasyStoreController extends Controller
 
         $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
 
-        $easystore_url = "https://admin.easystore.co";
+        $host_url = $this->host_url ?? "https://admin.easystore.co";
 
-        $url = "$easystore_url/oauth/authorize?app_id=". $this->client_id ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
+        $url = "$host_url/oauth/authorize?app_id=". $this->client_id ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
 
         return redirect()->away($url);
 
