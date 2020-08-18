@@ -236,7 +236,7 @@ class EasyStoreController extends Controller
         ksort($data);
 
         $data = urldecode(http_build_query($data));
-
+        dd($data);
         $calculated = hash_hmac('sha256', $data, $this->client_secret);
 
         return $hmac === $calculated;
