@@ -56,16 +56,16 @@ class EasyStoreController extends Controller
 
         $this->host_url = $host_url;
 
-        if (env("APP_ENV") == "production") {
-            $hmac_correct = $this->verifyHmac($hmac, [ "host_url" => $host_url, "shop" => $shop_url, "timestamp" => $timestamp ]);
-        } else {
-            $hmac_correct = $this->verifyHmac($hmac, [ "shop" => $shop_url, "timestamp" => $timestamp ]);
-        }
+        // if (env("APP_ENV") == "production") {
+        //     $hmac_correct = $this->verifyHmac($hmac, [ "host_url" => $host_url, "shop" => $shop_url, "timestamp" => $timestamp ]);
+        // } else {
+        //     $hmac_correct = $this->verifyHmac($hmac, [ "shop" => $shop_url, "timestamp" => $timestamp ]);
+        // }
 
 
-        if (!$hmac_correct) {
-            return response()->json(['errors' => 'Hmac validate fail'], 400);
-        }
+        // if (!$hmac_correct) {
+        //     return response()->json(['errors' => 'Hmac validate fail'], 400);
+        // }
 
         $shop = Shop::where('url', $shop_url)
                     ->where('is_deleted', false)
