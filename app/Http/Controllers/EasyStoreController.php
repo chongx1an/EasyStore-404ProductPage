@@ -86,7 +86,7 @@ class EasyStoreController extends Controller
         $timestamp = $request->timestamp;
         $shop_url = $request->shop;
         $hmac = $request->hmac;
-        dd($request);
+
         $this->host_url = $host_url;
 
         if (env("APP_ENV") == "production") {
