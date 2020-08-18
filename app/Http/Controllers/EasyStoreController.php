@@ -234,7 +234,7 @@ class EasyStoreController extends Controller
     private function verifyHmac($hmac, $data) {
 
         ksort($data);
-
+        dd($data);
         $data = urldecode(http_build_query($data));
         dd($data);
         $calculated = hash_hmac('sha256', $data, $this->client_secret);
