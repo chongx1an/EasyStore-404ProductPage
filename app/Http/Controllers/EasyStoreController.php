@@ -56,8 +56,7 @@ class EasyStoreController extends Controller
 
         $this->host_url = $host_url;
 
-        // $hmac_correct = $this->verifyHmac($hmac, [ "host_url" => $host_url, "shop" => $shop_url, "timestamp" => $timestamp ]);
-        $hmac_correct = $this->verifyHmac($hmac, [ "shop" => $shop_url, "timestamp" => $timestamp ]);
+        $hmac_correct = $this->verifyHmac($hmac, [ "host_url" => $host_url, "shop" => $shop_url, "timestamp" => $timestamp ]);
 
         if (!$hmac_correct) {
             return response()->json(['errors' => 'Hmac validate fail'], 400);
