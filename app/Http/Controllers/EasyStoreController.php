@@ -81,7 +81,7 @@ class EasyStoreController extends Controller
         $timestamp = $request->timestamp;
         $shop_url = $request->shop;
         $hmac = $request->hmac;
-        dd($request);
+
         $this->host_url = $host_url;
 
         $hmac_correct = $this->verifyHmac($hmac, [ "code" => $code, "host_url" => $host_url, "shop" => $shop_url, "timestamp" => $timestamp ]);
@@ -214,7 +214,7 @@ class EasyStoreController extends Controller
 
         $redirect_uri = "https://" . $_SERVER['SERVER_NAME'] . $this->redirect_path;
 
-        $host_url = $this->host_url ?? "https://admin.easystore.blue";
+        $host_url = $this->host_url ?? "https://admin.easystore.co";
 
         $url = "$host_url/oauth/authorize?app_id=". $this->client_id ."&scope=". implode(",", $this->app_scopes) ."&redirect_uri=" . $redirect_uri;
 
